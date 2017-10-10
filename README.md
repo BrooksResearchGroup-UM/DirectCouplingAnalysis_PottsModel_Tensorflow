@@ -54,7 +54,9 @@ In this example, we first download a MSA from Pfam and use the MSA to train a Po
 4. **Calculate and plot the interaction score.**
    
    Given the model `./model/model_weight_decay_0.050.pkl`, `./script/calc_score.py` is used to calculate the interaction scores
-   between pairs of positions in the MSA and plot the top 80 pairs of positions ranked using interaction scores.
+   between pairs of positions in the MSA and plot the top 80 pairs of positions ranked using interaction scores. The result contact
+   map is shown in the 
+   ![Figure](./output/contact_both.pdf "Figure")
    ```
    python ./script/calc_score.py ./model/model_weight_decay_0.050.pkl 80
    ```
