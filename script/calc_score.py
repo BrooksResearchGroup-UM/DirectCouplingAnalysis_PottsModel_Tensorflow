@@ -57,6 +57,10 @@ tmp = np.copy(score_CN).reshape([-1])
 tmp.sort()
 cutoff = tmp[-args.N*2]
 contact_plm = score_CN > cutoff
+for j in range(contact_plm.shape[0]):
+    for i in range(j, contact_plm.shape[1]):
+        contact_plm[i,j] = False
+
 
 ######################################################################
 #### Contact Maps from PDB Structure ######
@@ -90,21 +94,25 @@ for i in range(contact_pdb.shape[0]):
 f = open("./pfam_msa/seq_pos_idx.pkl", 'rb')
 position_idx = np.array(pickle.load(f))
 f.close()
-
 contact_pdb = contact_pdb[position_idx + offset,:][:,position_idx + offset]
+
+for j in range(contact_pdb.shape[0]):
+    for i in range(j, contact_pdb.shape[1]):
+        contact_pdb[i,j] = False
 
 ##### Plot contacts from both #####
 fig = plt.figure(figsize = (10,10))
 fig.clf()
 I,J = np.where(contact_pdb)
-plt.plot(I,J, 'bo', alpha = 0.2, markersize = 8)
+plt.plot(I,J, 'bo', alpha = 0.2, markersize = 8, label = 'native contacts from PDB')
 plt.axes().set_aspect('equal')
 #plt.imshow(contact_pdb, cmap = "binary", alpha = 0.5)
 I,J = np.where(contact_plm)
-plt.plot(I,J, 'r^', markersize = 6, mew = 1.5)
+plt.plot(I,J, 'r^', markersize = 6, mew = 1.5, label = 'predicted contacts from Potts model')
 # plt.xlim((0,153))
 # plt.ylim((0,153))
 plt.title(protein)
+plt.legend()
 subprocess.run(['mkdir', '-p', 'output'])
 plt.savefig("./output/contact_both.png")
 plt.show()
