@@ -19,10 +19,31 @@ In this implementation, the pseudo maximum likelihood method is used for learnin
 in the optimization, the weight matrix of the Potts model is restrainted to be symmetric. L2-normed penalty on the weight parameters is used for regulization.
 
 # Reference
-The implementation here mainly follows the method presented in reference 1. I also list the reference 2 and 3, where introduced pseduo maximum likelihood method and average-product correction method, respectively.
+The implementation here mainly follows the method presented in reference 1. I also list the reference 2 and 3, which introduced pseduo maximum likelihood method and average-product correction method, respectively.
 
 1. Ekeberg, Magnus, et al. "Improved contact prediction in proteins: using pseudolikelihoods to infer Potts models." Physical Review E 87.1 (2013): 012707.
 2. Besag, Julian. "Statistical analysis of non-lattice data." The statistician (1975): 179-195.
 3. Dunn, Stanley D., Lindi M. Wahl, and Gregory B. Gloor. "Mutual information without the influence of phylogeny or entropy dramatically improves residue contact prediction." Bioinformatics 24.3 (2007): 333-340.
 
 # Example
+In this example, we first download a MSA from Pfam and use the MSA to train a Potts model. You can also use other method to make a MSA. Based on the trained Potts model, we calculate interaction scores between pairs of positions using average-product correction (AFC) method. At the end, we compare the pairs of postions with high interaction scores with native contact map obtained from a PDB structure.
+
+1. ** Download a MSA from Pfam**
+	```
+	python script/download_MSA.py PF00041
+	```
+	
+2. ** Process the MSA **
+   ```
+   python script/process_MSA.py ./pfam_msa/PF00041_full.txt TENA_HUMAN/804-884 ./pfam_msa/
+   ```
+
+3. ** Learn the Potts model **
+   ```
+   python ./script/Potts_model.py ./pfam_msa/ 200 0.05 ./model/
+   ```
+
+4. ** Calculate and plot the interaction score **
+   ```
+   python script/calc_score.py ./model/model_weight_decay_0.050.pkl 80
+   ```
