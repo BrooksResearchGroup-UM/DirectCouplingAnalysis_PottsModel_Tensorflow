@@ -28,22 +28,22 @@ The implementation here mainly follows the method presented in reference 1. I al
 # Example
 In this example, we first download a MSA from Pfam and use the MSA to train a Potts model. You can also use other method to make a MSA. Based on the trained Potts model, we calculate interaction scores between pairs of positions using average-product correction (AFC) method. At the end, we compare the pairs of postions with high interaction scores with native contact map obtained from a PDB structure.
 
-1. ** Download a MSA from Pfam**
+1. **Download a MSA from Pfam**
 	```
 	python script/download_MSA.py PF00041
 	```
 	
-2. ** Process the MSA **
+2. **Process the MSA**
    ```
    python script/process_MSA.py ./pfam_msa/PF00041_full.txt TENA_HUMAN/804-884 ./pfam_msa/
    ```
 
-3. ** Learn the Potts model **
+3. **Learn the Potts model**
    ```
    python ./script/Potts_model.py ./pfam_msa/ 200 0.05 ./model/
    ```
 
-4. ** Calculate and plot the interaction score **
+4. **Calculate and plot the interaction score**
    ```
    python script/calc_score.py ./model/model_weight_decay_0.050.pkl 80
    ```
