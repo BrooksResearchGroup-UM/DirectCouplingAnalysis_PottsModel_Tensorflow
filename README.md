@@ -28,22 +28,33 @@ The implementation here mainly follows the method presented in reference 1. I al
 # Example
 In this example, we first download a MSA from Pfam and use the MSA to train a Potts model. You can also use other method to make a MSA. Based on the trained Potts model, we calculate interaction scores between pairs of positions using average-product correction (AFC) method. At the end, we compare the pairs of postions with high interaction scores with native contact map obtained from a PDB structure.
 
-1. **Download a MSA from Pfam**
-	```
-	python script/download_MSA.py PF00041
-	```
-	
-2. **Process the MSA**
+1. **Download a MSA from Pfam.**
+
+   Given a Pfam ID (PF00041), `./script/download_MSA.py` downloads the corresponding multiple sequence alignment and saves it in the file `./pfam_msa/PF00041_full.txt`
    ```
-   python script/process_MSA.py ./pfam_msa/PF00041_full.txt TENA_HUMAN/804-884 ./pfam_msa/
+   python ./script/download_MSA.py PF00041
    ```
 
-3. **Learn the Potts model**
+2. **Process the MSA.**
+
+   The downloaded MSA can not be used directly to train the Potts model. It has to be processed into a specific format using `./script/process_MSA.py`. The query `TENA_HUMAN/804-884` is used as the reference sequence to clean up the MSA. The results are saved
+   in directory `./pfam_msa/` and they include files `seq_msa_binary.pkl, seq_msa.pkl, seq_pos_idx.pkl, seq_weights.pkl`.
+   ```
+   python ./script/process_MSA.py ./pfam_msa/PF00041_full.txt TENA_HUMAN/804-884 ./pfam_msa/
+   ```
+   
+
+3. **Learn the Potts model.**
+
+   Here we set the hyperparameters for learning the Potts model: 200 for maximum num of optimization steps and 0.05 for weight decay factor. The resulting Potss model is saved as `./model/model_weight_decay_0.050.pkl`.
    ```
    python ./script/Potts_model.py ./pfam_msa/ 200 0.05 ./model/
    ```
 
-4. **Calculate and plot the interaction score**
+4. **Calculate and plot the interaction score.**
+   
+   Given the model `./model/model_weight_decay_0.050.pkl`, `./script/calc_score.py` is used to calculate the interaction scores
+   between pairs of positions in the MSA and plot the top 80 pairs of positions ranked using interaction scores.
    ```
-   python script/calc_score.py ./model/model_weight_decay_0.050.pkl 80
+   python ./script/calc_score.py ./model/model_weight_decay_0.050.pkl 80
    ```
